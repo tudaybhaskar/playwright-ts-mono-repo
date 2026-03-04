@@ -4,7 +4,7 @@ pipeline {
         stage('Failing stage'){
             steps {
                 echo 'Running stage called : Failing stage'
-                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE')
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Has some Error')
                 sh 'exit 1' // This command will cause the stage to fail
             }
             post {
