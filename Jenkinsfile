@@ -4,8 +4,9 @@ pipeline {
         stage('Failing stage'){
             steps {
                 echo 'Running stage called : Failing stage'
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Has some Error')
-                sh 'exit 1' // This command will cause the stage to fail
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE', message: 'Has some Error'){
+                    sh 'exit 1' // This command will cause the stage to fail
+                }
             }
             post {
                 failure{
@@ -14,6 +15,36 @@ pipeline {
                 always {
                     echo 'This runs regardless of the stage result'
                 }
+            }
+        }
+        stage('Usage of script block - Groovy learning'){
+            steps{
+                script{
+                    def browsers = ['chromium', 'firefox', 'webkit']
+
+                    for( browser in browsers ){
+                        echo "--- Starting tests for ${browser}"
+
+                        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS'){
+                            sh 'exit 0'
+                        }
+                    }
+                }
+            }
+            
+        }
+        stage('Usage of try-catch - Script - Groovy Learning'){
+            script{
+                steps{
+                    try {
+                        sh 'exit 1'
+                    } catch (Exception e) {
+                        echo "Tests failed, marking build as SUCCESS even there is a failure"
+                        currentBuild.result = 'SUCCESS' 
+                        // This won't stop the pipeline, it just sets the 'Yellow' flag
+                    }
+                }
+                
             }
         }
     }
