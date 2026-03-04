@@ -34,8 +34,8 @@ pipeline {
             
         }
         stage('Usage of try-catch - Script - Groovy Learning'){
-            script{
-                steps{
+            steps{
+                script{
                     try {
                         sh 'exit 1'
                     } catch (Exception e) {
